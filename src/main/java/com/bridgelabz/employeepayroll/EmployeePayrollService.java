@@ -3,8 +3,17 @@
  */
 package com.bridgelabz.employeepayroll;
 
+import java.util.List;
+
 public class EmployeePayrollService {
-    public boolean someLibraryMethod() {
+    private List<EmployeePayrollService> employeePayrollList;
+
+	public boolean someLibraryMethod() {
         return true;
     }
+
+	public List<EmployeePayrollService> readEmployeePayrollData() {
+		this.employeePayrollList  = new EmployeePayrollDBService().readData();
+		return this.readEmployeePayrollData();
+	}
 }

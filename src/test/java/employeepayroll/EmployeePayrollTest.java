@@ -9,9 +9,14 @@ import com.bridgelabz.employeepayroll.EmployeePayrollService;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 public class EmployeePayrollTest {
-	
-    @Test public void givenEmployeePayrollInDB_WhenRetrieved_ShouldPassTheTest() {
-    	System.out.println("Welcome To employee payroll service");
-    }
+
+	@Test
+	public void givenEmployeePayrollInDB_WhenRetrieved_ShouldPassTheTest() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<EmployeePayrollService> employeePayrollData = employeePayrollService.readEmployeePayrollData();
+		assertEquals(3, employeePayrollData.size());
+ 	}
 }
