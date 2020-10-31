@@ -7,30 +7,37 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EmployeePayrollService {
-    private List<Employee> employeePayrollList;
-    
-    private Employee getEmployeeData(String name) {
-		return this.employeePayrollList.stream().filter(employee->employee.name.equals(name)).findFirst().orElse(null);
-	}
-	public boolean someLibraryMethod() {
-        return true;
-    }
+	private List<Employee> employeePayrollList;
+	EmployeePayrollDBService employeePayrollDBService;
 
-	public List<Employee> readEmployeePayrollData() {
-		this.employeePayrollList  = new EmployeePayrollDBService().readData();
-		return this.employeePayrollList;
+	public EmployeePayrollService() {
+		this.employeePayrollDBService = EmployeePayrollDBService.getInstance();
 	}
-	public void updateSalary(String name, double salary) throws SQLCustomException {
-		int result = new EmployeePayrollDBService().updateDataWithNormalStatement(name, salary);
-		if(result == 0) throw new SQLCustomException("No Such Entry Found", SQLCustomException.ExceptionType.NO_SUCH_ENTRY);
-		Employee employee = this.getEmployeeData(name);
-		if(employee!=null)employee.salary = salary;
-	}
-	
+
 	public boolean checkEmployeePayrollInSyncWithDB(String name) {
-		List<Employee> employeePayrollDataList  = new EmployeePayrollDBService().getEmployeePayrollData(name);
+		List<Employee> employeePayrollDataList = employeePayrollDBService.getEmployeePayrollData(name);
 		return employeePayrollDataList.get(0).equals(getEmployeeData(name));
 	}
 
+	private Employee getEmployeeData(String name) {
+		return this.employeePayrollList.stream().filter(employee -> employee.name.equals(name)).findFirst()
+				.orElse(null);
+	}
+
+	public List<Employee> readEmployeePayrollData() {
+		this.employeePayrollList = employeePayrollDBService.readData();
+		return this.employeePayrollList;
+	}
+
+	public void updateSalary(String name, double salary) throws SQLCustomException {
+		int result = employeePayrollDBService.updateDataWithNormalStatement(name, salary);
+		if (result == 0)
+			throw new SQLCustomException("No Such Entry Found", SQLCustomException.ExceptionType.NO_SUCH_ENTRY);
+		Employee employee = this.getEmployeeData(name);
+		if (employee != null)
+			employee.salary = salary;
+	}
 	
+	
+
 }
