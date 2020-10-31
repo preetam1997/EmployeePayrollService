@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import com.bridgelabz.employeepayroll.Employee;
 import com.bridgelabz.employeepayroll.EmployeePayrollService;
+import com.bridgelabz.employeepayroll.SQLCustomException;
 
 import static org.junit.Assert.*;
 
@@ -20,4 +21,18 @@ public class EmployeePayrollTest {
 		List<Employee> employeePayrollData = employeePayrollService.readEmployeePayrollData();
 		assertEquals(3, employeePayrollData.size());
  	}
+	
+	@Test
+	public void givenNewSalary_WhenUpdated_ShouldSyncWithTheDatabase() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<Employee> employeePayrollData = employeePayrollService.readEmployeePayrollData();
+		try {
+			employeePayrollService.updateSalary("Terisa", 3000000);
+			boolean result  = employeePayrollService.checkEmployeePayrollInSyncWithDB("Terisa");
+			assertTrue(result);
+		} catch (SQLCustomException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

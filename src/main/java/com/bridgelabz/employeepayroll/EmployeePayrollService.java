@@ -4,10 +4,14 @@
 package com.bridgelabz.employeepayroll;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EmployeePayrollService {
     private List<Employee> employeePayrollList;
-
+    
+    private Employee getEmployeeData(String name) {
+		return this.employeePayrollList.stream().filter(employee->employee.name.equals(name)).findFirst().orElse(null);
+	}
 	public boolean someLibraryMethod() {
         return true;
     }
@@ -16,4 +20,17 @@ public class EmployeePayrollService {
 		this.employeePayrollList  = new EmployeePayrollDBService().readData();
 		return this.employeePayrollList;
 	}
+	public void updateSalary(String name, double salary) throws SQLCustomException {
+		int result = new EmployeePayrollDBService().updateDataWithNormalStatement(name, salary);
+		if(result == 0) throw new SQLCustomException("No Such Entry Found", SQLCustomException.ExceptionType.NO_SUCH_ENTRY);
+		Employee employee = this.getEmployeeData(name);
+		if(employee!=null)employee.salary = salary;
+	}
+	
+	public boolean checkEmployeePayrollInSyncWithDB(String name) {
+		List<Employee> employeePayrollDataList  = new EmployeePayrollDBService().getEmployeePayrollData(name);
+		return employeePayrollDataList.get(0).equals(getEmployeeData(name));
+	}
+
+	
 }
