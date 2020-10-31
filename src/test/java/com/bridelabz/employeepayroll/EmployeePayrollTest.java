@@ -11,6 +11,7 @@ import com.bridgelabz.employeepayroll.SQLCustomException;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class EmployeePayrollTest {
@@ -34,5 +35,14 @@ public class EmployeePayrollTest {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	@Test
+	public void givenEmployeePayrollInDB_WhenRetrievedRetrievedBteweenDateRange_ShouldPassTheTest() {
+		EmployeePayrollService employeePayrollService = new EmployeePayrollService();
+		List<Employee> employeePayrollData = employeePayrollService.retrieveDateBetweenDateRange("2018-01-03", "2020-05-21");
+		
+		boolean result = new Employee(2, "Terisa", 3000000, LocalDate.parse("2019-11-13")).equals(employeePayrollData.get(1));
+		assertTrue(result);
 	}
 }

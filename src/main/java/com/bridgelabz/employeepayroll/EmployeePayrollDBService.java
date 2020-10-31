@@ -43,8 +43,24 @@ public class EmployeePayrollDBService {
 		}
 		return employeePayrollList;
 	}
+	
+	public List<Employee> retrieveBetweenDates(String startDate, String endDate) {
 
-	public int updateDataWithNormalStatement(String name, double salary) {
+		String sql = String.format("SELECT * FROM employee_payroll WHERE start >= '%s' AND start <= '%s'", startDate,
+				endDate);
+		List<Employee> employeePayrollList = new ArrayList<>();
+		try (Connection connection = this.getConnection()) {
+
+			Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(sql);
+			employeePayrollList = this.getEmployeePayrollData(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return employeePayrollList;
+	}
+
+	public int updateDataPreparedStatement(String name, double salary) {
 		String sql = String.format("update employee_payroll set salary = %.2f where name = '%s'", salary, name);
 		try (Connection connection = this.getConnection()) {
 			Statement statement = connection.createStatement();
@@ -84,10 +100,10 @@ public class EmployeePayrollDBService {
 				LocalDate date = resultSet.getDate("start").toLocalDate();
 
 				employeePayrollList.add(new Employee(id, name, salary, date));
-				
+
 			}
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
 		return employeePayrollList;
@@ -103,4 +119,6 @@ public class EmployeePayrollDBService {
 		}
 
 	}
+
+	
 }

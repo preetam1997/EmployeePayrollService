@@ -3,6 +3,7 @@
  */
 package com.bridgelabz.employeepayroll;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,14 +31,18 @@ public class EmployeePayrollService {
 	}
 
 	public void updateSalary(String name, double salary) throws SQLCustomException {
-		int result = employeePayrollDBService.updateDataWithNormalStatement(name, salary);
+		int result = employeePayrollDBService.updateDataPreparedStatement(name, salary);
 		if (result == 0)
 			throw new SQLCustomException("No Such Entry Found", SQLCustomException.ExceptionType.NO_SUCH_ENTRY);
 		Employee employee = this.getEmployeeData(name);
 		if (employee != null)
 			employee.salary = salary;
 	}
-	
-	
+
+	public List<Employee> retrieveDateBetweenDateRange(String startDate, String endDate) {
+		this.employeePayrollList = employeePayrollDBService.retrieveBetweenDates(startDate,endDate);
+		return employeePayrollList;
+		
+	}
 
 }
